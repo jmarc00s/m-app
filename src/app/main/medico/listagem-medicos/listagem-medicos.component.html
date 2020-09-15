@@ -1,0 +1,44 @@
+<div>
+  <div class="row mb-4">
+    <div class="col-md">
+      <h1 class="h2">Médicos</h1>
+    </div>
+    <div class="col-md">
+      <a routerLink="new" class="btn btn-success float-right">
+        + Novo médico
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>CRM</th>
+            <th>Telefone</th>
+            <th>Valor da consulta</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medico of medicos">
+            <td>{{medico.id}}</td>
+            <td>{{medico.nome}}</td>
+            <td>{{medico.crm}}</td>
+            <td>{{medico.telefone}}</td>
+            <td>{{medico.valorConsulta | currency: 'BRL'}}</td>
+            <td>
+              <button class="btn btn-sm btn-primary mr
+              -1"><i class="fa fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+
