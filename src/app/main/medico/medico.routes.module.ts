@@ -1,3 +1,4 @@
+import { FormularioMedicoComponent } from './formulario-medico/formulario-medico.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ListagemMedicosComponent } from './listagem-medicos/listagem-medicos.component';
@@ -10,6 +11,15 @@ const ROTAS: Routes = [
     resolve: {
       medicos: ListagemMedicosResolver
     }
+  },
+  {
+    path: 'new',
+    component: FormularioMedicoComponent
+  },
+
+  {
+    path: ':id/editar',
+    component: FormularioMedicoComponent
   }
 ];
 

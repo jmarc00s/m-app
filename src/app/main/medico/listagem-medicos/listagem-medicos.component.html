@@ -28,11 +28,10 @@
             <td>{{medico.nome}}</td>
             <td>{{medico.crm}}</td>
             <td>{{medico.telefone}}</td>
-            <td>{{medico.valorConsulta | currency: 'BRL'}}</td>
+            <td>{{medico.valorConsulta | currency: 'BRL': 'symbol' }}</td>
             <td>
-              <button class="btn btn-sm btn-primary mr
-              -1"><i class="fa fa-edit"></i></button>
-              <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+              <button class="btn btn-sm btn-primary mr-1" [routerLink]="[medico.id,'editar']"><i class="fa fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger" (click)="removerMedico(medico)"><i class="fa fa-trash"></i></button>
             </td>
           </tr>
         </tbody>

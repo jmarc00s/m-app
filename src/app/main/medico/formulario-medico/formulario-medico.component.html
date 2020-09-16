@@ -1,0 +1,49 @@
+<div class="container">
+  <MApp-header [titulo]="titulo"
+              tituloBotao="Salvar"
+              [desabilitarBotao]="formularioInvalido"
+              (botaoHeaderClick)="salvar()"></MApp-header>
+
+  <div class="card">
+      <div class="card-header">
+          Informações de médico
+      </div>
+      <div class="card-body">
+        <form [formGroup]="form">
+          <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="crm">CRM</label>
+                  <input type="text" id="crm" [ngClass]="{'is-invalid': form.get('crm').invalid}" class="form-control" formControlName="crm">
+                  <small class="text-danger" *ngIf="form.get('crm').hasError('required')">Campo obrigatório</small>
+                  <small class="text-danger" *ngIf="form.get('crm').hasError('maxlength')">CRM pode conter até 10 caracteres.</small>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label for="nome">Nome</label>
+                  <input type="text" id="nome" [ngClass]="{'is-invalid': form.get('nome').invalid}" class="form-control" formControlName="nome">
+                  <small class="text-danger" *ngIf="form.get('nome').hasError('required')">Campo obrigatório</small>
+                  <small class="text-danger" *ngIf="form.get('nome').hasError('maxlength')">Nome pode conter até 100 caracteres.</small>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="telefone">Telefone</label>
+                  <input class="form-control" [ngClass]="{'is-invalid': form.get('telefone').invalid}" type="text" id="telefone" formControlName="telefone" >
+                  <small class="text-danger" *ngIf="form.get('telefone').hasError('maxlength')">Telefone pode conter até 20 caracteres.</small>
+                </div>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="valoConsultra">Valor da consulta</label>
+                <input class="form-control" type="text" currencyMask formControlName="valorConsulta">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>

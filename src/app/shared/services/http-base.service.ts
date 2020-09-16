@@ -30,7 +30,7 @@ export abstract class HttpBaseService<T extends BaseModel> {
   }
 
   remover(id: number): Observable<any>{
-    return this._http.delete(this._baseUrl + this.rotaApi + `${id}`);
+    return this._http.delete(this._baseUrl + this.rotaApi + `/${id}`);
   }
 
 }
