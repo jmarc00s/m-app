@@ -3,7 +3,7 @@ import { MedicoHttpService } from './../shared/medico.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OperacoesFormulario } from '../../../shared/types/Formulario.types'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators'
 import { MedicoModel } from '../shared/medico.model';
 import { ToastrService } from 'ngx-toastr';
@@ -17,12 +17,25 @@ import { ToastrService } from 'ngx-toastr';
 export class FormularioMedicoComponent implements OnInit, IFormulario<MedicoModel> {
 
   form: FormGroup;
-  private _operacao: OperacoesFormulario;
+  operacao: OperacoesFormulario;
   private _medico: MedicoModel;
 
 
+  get nomeControl(): AbstractControl {
+    return this.form.get('nome');
+  }
+
+  get crmControl(): AbstractControl {
+    return this.form.get('crm');
+  }
+
+  get telefoneControl(): AbstractControl {
+    return this.form.get('telefone');
+  }
+
+
   get titulo(): string {
-    return this._operacao === 'editando' ? 'Editando médico': 'Inserindo médico';
+    return this.operacao === 'editando' ? 'Editando médico': 'Inserindo médico';
   }
 
   constructor(private _activatedRoute: ActivatedRoute,
@@ -38,18 +51,17 @@ export class FormularioMedicoComponent implements OnInit, IFormulario<MedicoMode
   }
 
   ngOnInit(): void {
-    this._verificarTratarOperacao(this._activatedRoute.snapshot.params['id']);
+    this.verificarETratarOperacao(this._activatedRoute.snapshot.params['id']);
     this.form = this.construirFormulario();
   }
 
   salvar(): void {
     const entidade = this.form.getRawValue() as MedicoModel;
-
     if(this._medico){
       entidade.id = this._medico.id;
       this._medicoHttpService.editar(entidade).pipe(take(1)).subscribe(() => this._onSave('Médico editado com sucesso!'));
     } else {
-      this._medicoHttpService.salvar(entidade).pipe(take(1)).subscribe(() => this._onSave('Médico salvo com sucesso!'));
+      this._medicoHttpService.criar(entidade).pipe(take(1)).subscribe(() => this._onSave('Médico salvo com sucesso!'));
     }
 
   }
@@ -65,9 +77,9 @@ export class FormularioMedicoComponent implements OnInit, IFormulario<MedicoMode
 
   }
 
-  private _verificarTratarOperacao(id: number): void {
+  verificarETratarOperacao(id: number): void {
     if(id){
-      this._operacao = 'editando';
+      this.operacao = 'editando';
       this._medicoHttpService.buscar(id).pipe(take(1)).subscribe(data => {
         this.form.patchValue(data);
         this._medico = data as MedicoModel;
@@ -75,7 +87,7 @@ export class FormularioMedicoComponent implements OnInit, IFormulario<MedicoMode
       return;
     }
 
-    this._operacao = 'inserindo';
+    this.operacao = 'inserindo';
   }
 
   private _onSave(mensagem: string): void {

@@ -1,0 +1,55 @@
+<MApp-formulario-padrao
+  [titulo]="titulo"
+  [rotaVoltarPara]="['consultorios']"
+  [desabilitarBotaoSalvar]="formularioInvalido"
+  tituloInformativo="Informações de consultório"
+  (salvar)="salvar()">
+
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+
+          <input
+            type="text"
+            id="nome"
+            class="form-control"
+            formControlName="nome"
+            maxlength="100">
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="telefone">Telefone</label>
+          <input
+            type="text"
+            id="telefone"
+            [ngClass]="{'is-invalid': telefoneControl.invalid}"
+            class="form-control"
+            formControlName="telefone"
+            maxlength="20">
+            <small class="text-danger" *ngIf="telefoneControl.hasError('required')">Campo obrigatório</small>
+            <small class="text-danger" *ngIf="telefoneControl.hasError('maxlength')">Telefone pode conter até 20 caracteres.</small>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="endereco">Endereço</label>
+          <input
+            type="text"
+            id="endereco"
+            formControlName="endereco"
+            class="form-control"
+            [ngClass]="{'is-invalid': enderecoControl.invalid}"
+            maxlength="200">
+            <small class="text-danger" *ngIf="enderecoControl.hasError('required')">Campo obrigatório</small>
+            <small class="text-danger" *ngIf="enderecoControl.hasError('maxlength')">Telefone pode conter até 20 caracteres.</small>
+        </div>
+      </div>
+    </div>
+  </form>
+</MApp-formulario-padrao>

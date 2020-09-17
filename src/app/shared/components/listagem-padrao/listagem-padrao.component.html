@@ -1,0 +1,9 @@
+<div class="container">
+    <MApp-header
+      [titulo]="titulo"
+      [desabilitarBotao]="false"
+      [tituloBotao]="tituloBotao"
+      (botaoHeaderClick)="headerClick.emit()">
+    </MApp-header>
+    <ng-content></ng-content>
+</div>

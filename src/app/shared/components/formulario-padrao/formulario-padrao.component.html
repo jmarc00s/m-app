@@ -1,0 +1,20 @@
+<div class="container">
+
+  <MApp-header [titulo]="titulo"
+              tituloBotao=" << Voltar"
+              [desabilitarBotao]="false"
+              (botaoHeaderClick)="voltarPara()">
+  </MApp-header>
+
+  <div class="card">
+      <div class="card-header">
+          {{tituloInformativo}}
+      </div>
+      <div class="card-body">
+        <ng-content></ng-content>
+      </div>
+      <div class="card-footer">
+        <button [disabled]="desabilitarBotaoSalvar" class="btn btn-success float-right" (click)="salvar.emit()">Salvar</button>
+      </div>
+  </div>
+</div>

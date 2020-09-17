@@ -1,0 +1,30 @@
+<MApp-listagem-padrao
+  titulo="Consultórios"
+  tituloBotao="+ Novo consultorio"
+  (headerClick)="adicionar()">
+
+  <p class="text-center" *ngIf="!listaEntidades.length">Nenhum consultório encontrado</p>
+
+  <table *ngIf="listaEntidades.length" class="table table-hover">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Endereço</th>
+        <th>Telefone</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let entidade of listaEntidades">
+        <td>{{entidade.nome}}</td>
+        <td>{{entidade.endereco}}</td>
+        <td>{{entidade.telefone}}</td>
+        <td>
+          <button class="btn btn-sm btn-primary mr-1" [routerLink]="[entidade.id,'editar']"><i class="fa fa-edit"></i></button>
+          <button class="btn btn-sm btn-danger" (click)="removerEntidade(entidade)"><i class="fa fa-trash"></i></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</MApp-listagem-padrao>

@@ -1,6 +1,7 @@
+import { IListagem } from './../../../shared/interfaces/IListagem';
 import { take } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MedicoHttpService } from './../shared/medico.service';
 import { MedicoModel } from './../shared/medico.model';
 import { ToastrService } from 'ngx-toastr';
@@ -9,38 +10,44 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './listagem-medicos.component.html',
   styleUrls: ['./listagem-medicos.component.scss']
 })
-export class ListagemMedicosComponent implements OnInit {
+export class ListagemMedicosComponent implements OnInit, IListagem<MedicoModel> {
 
-  medicos: MedicoModel[] = [];
+  listaEntidades: MedicoModel[] = [];
 
   constructor(private _activatedRoute: ActivatedRoute,
               private _medicoHttpService: MedicoHttpService,
-              private _toasterService: ToastrService) { }
+              private _toasterService: ToastrService,
+              private _router: Router) { }
 
   ngOnInit(): void {
-    this.medicos = this.buscarDadosRota();
+    this.listaEntidades = this.buscarDadosResolver();
   }
 
-  buscarDadosRota(): MedicoModel[]{
+  buscarDadosResolver(): MedicoModel[] {
     return this._activatedRoute.snapshot.data.medicos;
   }
 
-  removerMedico(medico: MedicoModel): void {
-    if(confirm(`Deseja remover o médico ${medico.nome}?`)){
-      this._medicoHttpService.remover(medico.id)
+  removerEntidade(entidade: MedicoModel): void {
+    if(confirm(`Deseja remover o médico ${entidade.nome}?`)){
+      this._medicoHttpService.remover(entidade.id)
           .pipe(take(1))
-          .subscribe(() => this.aoRemoverMedico(medico),
+          .subscribe(() => this.aoRemoverMedico(entidade),
                      () => this._toasterService.error('Não foi possível remover médico!', '', { timeOut: 3000}));
     }
   }
 
-  aoRemoverMedico(medico: MedicoModel): void {
-    this._toasterService.success('Médico removido com sucesso!', '', { timeOut: 3000});
-    this._removerMedicoDaLista(medico);
+  removerEntidadeDaLista(entidade: MedicoModel): void {
+    this.listaEntidades.splice(this.listaEntidades.indexOf(entidade), 1);
   }
 
-  private _removerMedicoDaLista(medico: MedicoModel): void {
-    this.medicos.splice(this.medicos.indexOf(medico), 1);
+
+  aoRemoverMedico(medico: MedicoModel): void {
+    this._toasterService.success('Médico removido com sucesso!', '', { timeOut: 3000});
+    this.removerEntidadeDaLista(medico);
+  }
+
+  adicionar(): void {
+    this._router.navigate(['medicos', 'new'])
   }
 
 }

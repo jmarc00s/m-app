@@ -8,7 +8,7 @@ import { MedicoModel } from './medico.model';
 })
 export class MedicoHttpService extends HttpBaseService<MedicoModel> {
 
-  constructor(protected _http: HttpClient) {
-    super(_http, 'api/medico');
+  constructor(protected http: HttpClient) {
+    super(http, 'api/medico');
   }
 }

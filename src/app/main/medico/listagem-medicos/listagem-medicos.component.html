@@ -1,14 +1,7 @@
-<div>
-  <div class="row mb-4">
-    <div class="col-md">
-      <h1 class="h2">Médicos</h1>
-    </div>
-    <div class="col-md">
-      <a routerLink="new" class="btn btn-success float-right">
-        + Novo médico
-      </a>
-    </div>
-  </div>
+<MApp-listagem-padrao
+        titulo="Médicos"
+        tituloBotao="+ Novo médico"
+        (headerClick)="adicionar()">
   <div class="row">
     <div class="col-md">
       <table class="table table-hover">
@@ -23,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let medico of medicos">
+          <tr *ngFor="let medico of listaEntidades">
             <td>{{medico.id}}</td>
             <td>{{medico.nome}}</td>
             <td>{{medico.crm}}</td>
@@ -31,13 +24,13 @@
             <td>{{medico.valorConsulta | currency: 'BRL': 'symbol' }}</td>
             <td>
               <button class="btn btn-sm btn-primary mr-1" [routerLink]="[medico.id,'editar']"><i class="fa fa-edit"></i></button>
-              <button class="btn btn-sm btn-danger" (click)="removerMedico(medico)"><i class="fa fa-trash"></i></button>
+              <button class="btn btn-sm btn-danger" (click)="removerEntidade(medico)"><i class="fa fa-trash"></i></button>
             </td>
           </tr>
         </tbody>
     </table>
     </div>
   </div>
-</div>
+</MApp-listagem-padrao>
 
 

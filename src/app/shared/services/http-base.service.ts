@@ -21,7 +21,7 @@ export abstract class HttpBaseService<T extends BaseModel> {
     return this._http.get<T[]>(this._baseUrl + this.rotaApi);
   }
 
-  salvar(obj: T): Observable<T>{
+  criar(obj: T): Observable<T>{
     return this._http.post<T>(this._baseUrl + this.rotaApi, obj);
   }
 

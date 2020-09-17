@@ -6,6 +6,10 @@ const ROTAS: Routes = [
   {
     path: 'medicos',
     loadChildren: () => import('./medico/medico.module').then(c => c.MedicoModule)
+  },
+  {
+    path: 'consultorios',
+    loadChildren: () => import('./consultorio/consultorio.module').then(c => c.ConsultorioModule)
   }
 ];
 
