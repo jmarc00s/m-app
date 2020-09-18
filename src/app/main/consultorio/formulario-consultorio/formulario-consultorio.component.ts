@@ -1,13 +1,18 @@
+import { MedicoConsultorio } from './../shared/medico-consultorio.model';
+import { EOperacaoVinculo } from './../shared/EOperacaoVinculo';
 import { MedicoModel } from './../../medico/shared/medico.model';
 import { ConsultorioModel } from './../shared/consultorio.model';
 import { IFormulario } from './../../../shared/interfaces/IFormulario';
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { OperacoesFormulario } from 'src/app/shared/types/Formulario.types';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsultorioHttpService } from '../shared/consultorio-http.service';
 import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, pipe } from 'rxjs';
+import { MedicoHttpService } from '../../medico/shared/medico.service';
+import { VinculoMedicoConsultorioModel } from '../shared/vinculo-medico-consultorio.model';
 
 @Component({
   selector: 'MApp-formulario-consultorio',
@@ -18,7 +23,9 @@ export class FormularioConsultorioComponent implements OnInit, IFormulario<Consu
 
   form: FormGroup;
   operacao: OperacoesFormulario;
-  private _consultorio: ConsultorioModel;
+  consultorio: ConsultorioModel = new ConsultorioModel();
+  medicoSelectControl: FormControl = new FormControl();
+  medicos$: Observable<MedicoModel[]>;
 
   get titulo(): string {
     return this.operacao === 'inserindo' ? 'Inserindo consultório' : 'Editando consultório'
@@ -36,15 +43,22 @@ export class FormularioConsultorioComponent implements OnInit, IFormulario<Consu
     return this.form.get('endereco');
   }
 
+
+  get OperacaoVinculo(): typeof EOperacaoVinculo {
+    return EOperacaoVinculo;
+  }
+
   constructor(private _activatedRoute: ActivatedRoute,
               private _formBuilder: FormBuilder,
               private _consultorioHttpService: ConsultorioHttpService,
               private _toastrService: ToastrService,
-              private _router: Router) { }
+              private _router: Router,
+              private _medicoHttpService: MedicoHttpService) { }
 
   ngOnInit(): void {
     this.verificarETratarOperacao(this._activatedRoute.snapshot.params['id']);
     this.form = this.construirFormulario();
+    this.medicos$ = this._medicoHttpService.buscarTodos();
   }
 
 
@@ -62,28 +76,50 @@ export class FormularioConsultorioComponent implements OnInit, IFormulario<Consu
       this._consultorioHttpService.buscar(id)
           .pipe(take(1))
           .subscribe((entidade: ConsultorioModel) => {
-            this._consultorio = entidade;
+            this.consultorio = entidade;
             this.form.patchValue(entidade);
           });
       return;
     }
+    this.medicoSelectControl.disable();
     this.operacao = 'inserindo';
   }
 
   salvar(): void {
     const entidade = this.form.getRawValue() as ConsultorioModel;
 
-    if(this._consultorio){
-      entidade.id = this._consultorio.id;
+    if(this.consultorio){
+      entidade.id = this.consultorio.id;
       this._consultorioHttpService.editar(entidade).pipe(take(1)).subscribe(() => this._OnSave('Consultório editado com sucesso!'));
     } else {
       this._consultorioHttpService.criar(entidade).pipe(take(1)).subscribe(() => this._OnSave('Consultório salvo com sucesso!'));
     }
   }
 
+  realizarOperacaoVinculo(operacao: EOperacaoVinculo, medicoId?: number): void {
+      const viewModel: VinculoMedicoConsultorioModel = {
+        operacao: operacao,
+        consultorioId: this.consultorio.id,
+        medicoId: parseInt(this.medicoSelectControl.value, 10) || medicoId
+      };
+
+      this
+        ._consultorioHttpService
+        .realizarOperacaoVinculo(viewModel)
+        .pipe(take(1))
+        .subscribe(consultorio => {
+            this._toastrService.success('Médico (des)vinculado com sucesso!', '', {timeOut: 3000});
+            this.consultorio = consultorio;
+            this.form.patchValue(consultorio);
+        }, (error) => this._toastrService.error(error.error, 'Erro', {timeOut: 3000}));
+  }
+
+
   private _OnSave(mensagem: string): void {
     this._toastrService.success(mensagem, 'Sucesso', {timeOut: 3000});
     this._router.navigate(['consultorios']);
   }
+
+
 
 }

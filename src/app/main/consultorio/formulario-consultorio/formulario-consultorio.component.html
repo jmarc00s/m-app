@@ -5,7 +5,7 @@
   tituloInformativo="Informações de consultório"
   (salvar)="salvar()">
 
-  <form [formGroup]="form">
+  <form [formGroup]="form" class="mb-5">
     <div class="row">
       <div class="col-md-9">
         <div class="form-group">
@@ -52,4 +52,48 @@
       </div>
     </div>
   </form>
+  <div class="row">
+    <div class="col-md text-center border-bottom mb-4">
+      <h4>Vincular médico a consultório</h4>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <select id="selectMedico" class="form-control" [formControl]="medicoSelectControl">
+            <option *ngFor="let medico of medicos$ | async" [value]="medico.id">{{medico.nome}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <button [disabled]="!consultorio" (click)="realizarOperacaoVinculo(OperacaoVinculo.vincular)" class="btn btn-outline-primary">Vincular</button>
+        </div>
+      </div>
+  </div>
+  <div class="row">
+   <div class="col-md">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">Médico</th>
+          <th class="text-center">Telefone</th>
+          <th class="text-center">Desvincular</th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="consultorio.medicosConsultorios.length">
+        <tr *ngFor="let vinculo of consultorio.medicosConsultorios">
+          <td class="text-center">{{vinculo.medico?.nome}}</td>
+          <td class="text-center">{{vinculo.medico?.telefone}}</td>
+          <td class="text-center">
+            <button class="btn btn-warning btn-sm" (click)="realizarOperacaoVinculo(OperacaoVinculo.desvincular, vinculo.medicoId)">
+              <i class="fa fa-undo" style="color: white;"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+   </div>
+  </div>
 </MApp-formulario-padrao>
