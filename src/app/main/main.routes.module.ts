@@ -4,6 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 const ROTAS: Routes = [
   {
+    path: '',
+    loadChildren: () => import('./inicio/inicio.module').then(c => c.InicioModule)
+  },
+  {
     path: 'medicos',
     loadChildren: () => import('./medico/medico.module').then(c => c.MedicoModule)
   },
